@@ -742,11 +742,26 @@ class Secondaries:
                                 if not self.flag_pyecloud:
                                     self.prepare_secondaries(itype,posC.maxsec)
                                 if top.wpid==0:weight=ones(n,'d')
-                                
+
                                 if self.flag_pyecloud:
                                     if top.wpid == 0:
                                         raise ValueError('Not compatible with pyecloud')
-                                    (xnew, ynew, znew, 
+
+                                    # DEBUG ##########################
+                                    from collections import OrderedDict
+                                    debug_dict = OrderedDict([
+                                        ('uxplost', uxplost),
+                                        ('uyplost', uyplost),
+                                        ('uzplost', uzplost),
+                                        ('gaminvlost', gaminvlost),
+                                        ('e0', e0),
+                                        ('Electron.mass', Electron.mass)
+                                        ])
+                                    for kk in debug_dict.keys():
+                                        print('%s: %s'%(kk, repr(debug_dict[kk])))
+                                    ####################################
+
+                                    (xnew, ynew, znew,
                                      uxsec, uysec, uzsec,
                                        weightsec) = self.pyecloud_secondary_emission(
                                         sintheta[:n], costheta[:n], sinphi[:n], cosphi[:n],
@@ -1307,6 +1322,26 @@ class Secondaries:
         uxnew = u_new[0, :]
         uynew = u_new[1, :]
         uznew = u_new[2, :]
+
+        # DEBUG ############################
+        from collections import OrderedDict
+        debug_dict = OrderedDict([
+            ('sintheta', sintheta),
+            ('costheta', costheta),
+            ('sinphi', sinphi),
+            ('cosphi', cosphi),
+            ('weightplost', weightplost),
+            ('xplost', xplost),
+            ('yplost', yplost),
+            ('zplost', zplost),
+            ('uxplost', uxplost),
+            ('uyplost', uyplost),
+            ('uzplost', uzplost),
+            ])
+        for kk in debug_dict.keys():
+            print('%s: %s'%(kk, repr(debug_dict[kk])))
+        ####################################
+
 
         return xnew, ynew, znew, uxnew, uynew, uznew, weightnew
 
