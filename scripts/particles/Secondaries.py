@@ -88,7 +88,7 @@ class Secondaries:
             assert(set_params_user is None)
             assert(material is None)
             assert(maxsec is None) # Probably just ignored
-           
+
             assert(pyecloud_fact_clean is not None)
             assert(pyecloud_fact_split is not None)
             assert(pyecloud_nel_mp_ref is not None)
@@ -98,7 +98,7 @@ class Secondaries:
             self.pyecloud_fact_clean = pyecloud_fact_clean
             self.pyecloud_fact_split = pyecloud_fact_split
             self.pyecloud_nel_mp_ref = pyecloud_nel_mp_ref
-            
+
         else:
             self.flag_pyecloud = False
 
@@ -579,7 +579,7 @@ class Secondaries:
                         pysum += sum(weight*uyplost)*top.pgroup.sm[js]*top.pgroup.sw[js]
                         pzsum += sum(weight*uzplost)*top.pgroup.sm[js]*top.pgroup.sw[js]
                     ek0max=max(max(e0),ek0max)
-                    
+
                     ## Collection of data
                     if 1:#cond.lcollectlpdata:
                         if js not in cond.lostparticles_angles:
@@ -735,7 +735,7 @@ class Secondaries:
                                     itypes=AppendableArray(typecode='i',autobump=100)
                                 else:
                                     itypes=None
-                                
+
                                 itype=self.inter[incident_species]['type'][ics]
                                 scale_factor=self.inter[incident_species]['scale_factor'][ics]
                                 if scale_factor is None:scale_factor=1.
@@ -893,7 +893,7 @@ class Secondaries:
                                 # Record number of emitted
                                 self.inter[incident_species]['emitted'][ics][ie] += ns*top.pgroup.sq[js_new]*top.pgroup.sw[js_new]
                                 self.inter[incident_species]['absorbed'][ics][ie] += top.pgroup.sq[js]*top.pgroup.sw[js]
-                                
+
                                 # pid[:,self.xoldpid]=xnew-vx*top.dt
                                 # pid[:,self.yoldpid]=ynew-vy*top.dt
                                 # pid[:,self.zoldpid]=znew-vz*top.dt
@@ -1152,7 +1152,7 @@ class Secondaries:
         if self.l_verbose>1:print 'secondaries generation finished'
 
     def call_set_params_user(self,maxsec,mat_num=None):
-        
+
         if self.flag_pyecloud:
             raise ValueError('This method shound not be used with pyecloud')
 
@@ -1212,7 +1212,7 @@ class Secondaries:
         return xnew,ynew,znew,uxsec,uysec,uzsec
 
     def pyecloud_secondary_emission(self, sintheta, costheta, sinphi, cosphi,
-                                        weightplost, 
+                                        weightplost,
                                         xplost, yplost, zplost,
                                         uxplost, uyplost, uzplost):
 
@@ -1223,15 +1223,15 @@ class Secondaries:
             cosphi * costheta,
             sinphi * costheta,
             -sintheta])
-        
+
         it2_impact = np.array([
             -sinphi,
             cosphi,
             0. * sintheta])
-        
+
         in_impact = np.array([
             cosphi*sintheta,
-            sinphi*sintheta, 
+            sinphi*sintheta,
             costheta])
 
         # Define local reference system (_impact)
@@ -1268,7 +1268,7 @@ class Secondaries:
         flag_seg = True
         nel_mp_th = self.pyecloud_fact_split * self.pyecloud_nel_mp_ref
         nel_impact = weightplost
-        
+
         (nel_emit_tot_events, event_type, event_info,
            nel_replace, x_replace, y_replace, z_replace,
            vx_replace, vy_replace, vz_replace, i_seg_replace,
@@ -1303,7 +1303,7 @@ class Secondaries:
 
         # Remove small macroparticles
         mask_keep = weight_impact_new > (self.pyecloud_fact_clean * self.pyecloud_nel_mp_ref)
-        
+
         xnew = x_impact_new[mask_keep]
         ynew = y_impact_new[mask_keep]
         znew = z_impact_new[mask_keep]
@@ -1311,10 +1311,10 @@ class Secondaries:
         vy_impact_new = vy_impact_new[mask_keep]
         vz_impact_new = vz_impact_new[mask_keep]
         weightnew = weight_impact_new[mask_keep]
-        
-        ix_impact_new = ix_impact_new[:, mask_keep] 
-        iy_impact_new = iy_impact_new[:, mask_keep] 
-        iz_impact_new = iz_impact_new[:, mask_keep] 
+
+        ix_impact_new = ix_impact_new[:, mask_keep]
+        iy_impact_new = iy_impact_new[:, mask_keep]
+        iz_impact_new = iz_impact_new[:, mask_keep]
 
 
         # Transform velocities to warp frame
@@ -1323,24 +1323,35 @@ class Secondaries:
         uynew = u_new[1, :]
         uznew = u_new[2, :]
 
-        # DEBUG ############################
-        from collections import OrderedDict
-        debug_dict = OrderedDict([
-            ('sintheta', sintheta),
-            ('costheta', costheta),
-            ('sinphi', sinphi),
-            ('cosphi', cosphi),
-            ('weightplost', weightplost),
-            ('xplost', xplost),
-            ('yplost', yplost),
-            ('zplost', zplost),
-            ('uxplost', uxplost),
-            ('uyplost', uyplost),
-            ('uzplost', uzplost),
-            ])
-        for kk in debug_dict.keys():
-            print('%s: %s'%(kk, repr(debug_dict[kk])))
-        ####################################
+        # # DEBUG ############################
+        # from collections import OrderedDict
+        # debug_dict = OrderedDict([
+        #     ('sintheta', sintheta),
+        #     ('costheta', costheta),
+        #     ('sinphi', sinphi),
+        #     ('cosphi', cosphi),
+        #     ('weightplost', weightplost),
+        #     ('xplost', xplost),
+        #     ('yplost', yplost),
+        #     ('zplost', zplost),
+        #     ('uxplost', uxplost),
+        #     ('uyplost', uyplost),
+        #     ('uzplost', uzplost),
+        #     ('ix_impact', ix_impact),
+        #     ('iy_impact', iy_impact),
+        #     ('iz_impact', iz_impact),
+        #     ('vx_impact',vx_impact),
+        #     ('vy_impact',vy_impact),
+        #     ('vz_impact',vz_impact),
+        #     ('Norm_x',Norm_x),
+        #     ('Norm_y',Norm_y),
+        #     ('v_impact_n',v_impact_n),
+        #     ('E_impact_eV',E_impact_eV),
+        #     ('costheta_impact', costheta_impact),
+        #     ])
+        # for kk in debug_dict.keys():
+        #     print('%s: %s'%(kk, repr(debug_dict[kk])))
+        # ####################################
 
 
         return xnew, ynew, znew, uxnew, uynew, uznew, weightnew
@@ -1359,8 +1370,7 @@ class Secondaries:
         """
         if self.flag_pyecloud:
             raise ValueError('This method shound not be used with pyecloud')
-        
-        
+
         if pos is None:
             return
         if mat_num is None:
@@ -1666,7 +1676,7 @@ class Secondaries:
 
         if self.flag_pyecloud:
             raise ValueError('This method shound not be used with pyecloud')
-        
+
         if(maxsec != posC.maxsec):
             posC.maxsec = maxsec
             posC.gchange("bincoeff")
@@ -1680,37 +1690,37 @@ class Secondaries:
             self.call_set_params_user(maxsec,self.mat_number)
 
     def getP1elast(self,E0,costheta,material,maxsec=10):
-        
+
         if self.flag_pyecloud:
             raise ValueError('This method shound not be used with pyecloud')
-        
+
         self.set_params(maxsec,material)
         return P1elast(E0,costheta,posC.P1einf,posC.P1epk,
                        posC.E0epk,posC.E0w,posC.powe,posC.epar1,posC.epar2)
 
     def getP1rediff(self,E0,costheta,material,maxsec=10):
-        
+
         if self.flag_pyecloud:
             raise ValueError('This method shound not be used with pyecloud')
-        
+
         self.set_params(maxsec,material)
         return P1rediff(E0,costheta,posC.Ecr,posC.rpar1,posC.rpar2,posC.qr,posC.P1rinf)
 
     def getdeltats(self,E0,costheta,material,maxsec=10):
-              
+
         if self.flag_pyecloud:
             raise ValueError('This method shound not be used with pyecloud')
-        
+
         self.set_params(maxsec,material)
         return deltats(E0,costheta,posC.dtspk,posC.E0tspk,
                        posC.powts,posC.tpar1,posC.tpar2,posC.tpar3,
                        posC.tpar4,posC.tpar5,posC.tpar6)
 
     def sey2(self,energy):
-                
+
         if self.flag_pyecloud:
             raise ValueError('This method shound not be used with pyecloud')
-        
+
         maxsec=10
 
         if(maxsec != posC.maxsec):
